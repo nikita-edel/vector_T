@@ -1,0 +1,33 @@
+std::vector benchmark
+max 2.0s per test | compiler: Clang 22.1.1
+[char]
+[int]
+[uint64_t]
+[Blob256]
+
+operation            type               ns/op       total_ops
+----------------------------------------------------------------
+push_back_1          char                0.20     10030724001
+push_back_64         char                0.03     57445188096
+insert_front         char               11.59       172762612
+insert_64_front      char                0.66      3019899392
+replace              char                0.17     11899240456
+----------------------------------------------------------------
+push_back_1          int                 0.20     10087872570
+push_back_64         int                 0.18     11005854208
+insert_front         int                25.71        77936570
+insert_64_front      int                 0.88      2281701888
+replace              int                 0.17     12084838408
+----------------------------------------------------------------
+push_back_1          uint64_t            0.21      9505661667
+push_back_64         uint64_t            0.41      4966056448
+insert_front         uint64_t           43.27        46259254
+insert_64_front      uint64_t            1.24      1677722112
+replace              uint64_t            0.17     12007243784
+----------------------------------------------------------------
+push_back_1          Blob256            10.21       196346959
+push_back_64         Blob256            21.61       113690240
+insert_front         Blob256          1181.53         1696619
+insert_64_front      Blob256            42.80        53105920
+replace              Blob256             3.16       633839917
+

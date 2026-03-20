@@ -1,0 +1,71 @@
+gcc -O3 vs clang++ -O3
+@ArchLinux x86_64 6.19.8, Ryzen r5 7600x, DDR5 6000MHz cl 30
+
+Output:
+
+vector_T C99 benchmark
+max 2.0s per test | compiler: 15.2.1 20260209
+[char]
+[int]
+[uint64_t]
+[Blob256]
+
+operation            type               ns/op       total_ops
+----------------------------------------------------------------
+push_back_1          char                0.19     10259349224
+push_back_64         char                0.04     53888418304
+insert_front         char               12.12       165186627
+insert_64_front      char                0.17     11475616256
+replace              char                0.37      5430810407
+----------------------------------------------------------------
+push_back_1          int                 0.19     10763814463
+push_back_64         int                 0.17     11676942848
+insert_front         int                25.15        79697776
+insert_64_front      int                 0.39      5167383040
+replace              int                 0.37      5435077109
+----------------------------------------------------------------
+push_back_1          uint64_t            0.19     10446164116
+push_back_64         uint64_t            0.40      5100274176
+insert_front         uint64_t           42.54        47018965
+insert_64_front      uint64_t            0.69      2952790528
+replace              uint64_t            0.37      5432979957
+----------------------------------------------------------------
+push_back_1          Blob256            10.86       184553362
+push_back_64         Blob256            15.93       129226752
+insert_front         Blob256          1169.85         1713171
+insert_64_front      Blob256            37.05        59489216
+replace              Blob256             3.12       640817874
+
+std::vector benchmark
+max 2.0s per test | compiler: Clang 22.1.1
+[char]
+[int]
+[uint64_t]
+[Blob256]
+
+operation            type               ns/op       total_ops
+----------------------------------------------------------------
+push_back_1          char                0.20     10030724001
+push_back_64         char                0.03     57445188096
+insert_front         char               11.59       172762612
+insert_64_front      char                0.66      3019899392
+replace              char                0.17     11899240456
+----------------------------------------------------------------
+push_back_1          int                 0.20     10087872570
+push_back_64         int                 0.18     11005854208
+insert_front         int                25.71        77936570
+insert_64_front      int                 0.88      2281701888
+replace              int                 0.17     12084838408
+----------------------------------------------------------------
+push_back_1          uint64_t            0.21      9505661667
+push_back_64         uint64_t            0.41      4966056448
+insert_front         uint64_t           43.27        46259254
+insert_64_front      uint64_t            1.24      1677722112
+replace              uint64_t            0.17     12007243784
+----------------------------------------------------------------
+push_back_1          Blob256            10.21       196346959
+push_back_64         Blob256            21.61       113690240
+insert_front         Blob256          1181.53         1696619
+insert_64_front      Blob256            42.80        53105920
+replace              Blob256             3.16       633839917
+
