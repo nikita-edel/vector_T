@@ -8,7 +8,7 @@ NOTE: this expands to around 350 - 700LOC (including the header without noop lik
 
 to navigate the source file, do a search for:
 {section name}START or END
-MAKROS -> HEPLERS HEAD SEMANTICS ALLOCERR ALLOC ERRORS //in the root directory makros/, copy&pasted
+MAKROS -> HELPERS HEAD SEMANTICS ALLOCERR ALLOC ERRORS //in the root directory makros/, copy&pasted
 HEADER -> STRUCT API // all the functions are here, just seach for _fnname
 	  IMPL (the implementation)
 UNDEFINES
@@ -692,7 +692,7 @@ typedef struct {
 //STRUCTEND
 
 //APISTART
-#if !defined(VECTOR_T_MOVE) && !defined(VECTOR_ALGIN_SIZE)
+#if !defined(VECTOR_T_MOVE) && !defined(VECTOR_ALIGN_SIZE)
 #define vector_foreach(pVec, declVar)\
 	for(size_t vec__i = 0, vec__once = 1; vec__i < (pVec)->count; ++vec__i, vec__once = 1)\
 		for( declVar = (pVec)->data[vec__i]; vec__once; vec__once = 0)
@@ -978,7 +978,7 @@ VEC__FN VEC_STATUS FN_NS(_init)(vec_T* vec) {
 
 
 #if !defined(VECTOR_DEBLOAT) && !defined(VECTOR_T_INIT)
-VEC__FN VEC_STATUS FN_NS(_init_set)(vec_T* vec, val_T* val) {
+VEC__FN VEC_STATUS FN_NS(_init_set)(vec_T* vec, const val_T* val) {
 	VEC__NULL_CHECK(vec);
 	VEC__T_MSET(vec->data, val, VECTOR_STATIC_SIZE);
 	vec->count = 0;
