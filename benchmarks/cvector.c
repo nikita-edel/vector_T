@@ -30,7 +30,7 @@ typedef struct {
 #include "../vector_T.h"
 
 // compile with -D_POSIX_C_SOURCE=200809L if you get an error
-static double now_sec(void) {
+static inline double now_sec(void) {
 	struct timespec ts;
 	clock_gettime(CLOCK_MONOTONIC, &ts);
 	return (double)ts.tv_sec + (double)ts.tv_nsec * 1e-9;
@@ -58,14 +58,14 @@ typedef struct {
 	double t0;
 } BenchState;
 
-static void bench_start(BenchState* b) {
+static inline void bench_start(BenchState* b) {
 	b->batch = 8;
 	b->total = 0;
 	b->elapsed = 0.0;
 	b->t0 = now_sec();
 }
 
-static void bench_update(BenchState* b, uint64_t ops) {
+static inline void bench_update(BenchState* b, uint64_t ops) {
 	b->total += ops;
 	b->elapsed = now_sec() - b->t0;
 
@@ -78,7 +78,7 @@ static void bench_update(BenchState* b, uint64_t ops) {
 	b->batch = want;
 }
 
-static void bench_finish(BenchState* b, const char* label, const char* type) {
+static inline void bench_finish(BenchState* b, const char* label, const char* type) {
 	Result* r = &g_results[g_nresults++];
 	snprintf(r->label, sizeof r->label, "%s", label);
 	snprintf(r->type_name, sizeof r->type_name, "%s", type);
@@ -86,7 +86,7 @@ static void bench_finish(BenchState* b, const char* label, const char* type) {
 	r->sec = b->elapsed;
 }
 
-static void print_results(void) {
+static inline void print_results(void) {
 	const char* last = "";
 
 	printf("\n%-20s %-10s  %12s  %14s\n", "operation", "type", "ns/op",
@@ -113,7 +113,7 @@ static void print_results(void) {
 	printf("\n");
 }
 
-static void bench_char(double S) {
+static inline void bench_char(double S) {
 	charvec v;
 	charvec_init(&v, 4);
 	BenchState b;
@@ -186,7 +186,7 @@ static void bench_char(double S) {
 	charvec_deinit(&v);
 }
 
-static void bench_int(double S) {
+static inline void bench_int(double S) {
 	intvec v;
 	intvec_init(&v, 4);
 	BenchState b;
@@ -259,7 +259,7 @@ static void bench_int(double S) {
 	intvec_deinit(&v);
 }
 
-static void bench_u64(double S) {
+static inline void bench_u64(double S) {
 	u64vec v;
 	u64vec_init(&v, 4);
 	BenchState b;
@@ -333,7 +333,7 @@ static void bench_u64(double S) {
 	u64vec_deinit(&v);
 }
 
-static void bench_blob(double S) {
+static inline void bench_blob(double S) {
 	static Blob256 blob;
 	memset(&blob, 0xAB, sizeof blob);
 

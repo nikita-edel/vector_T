@@ -58,10 +58,10 @@ struct StdWrapper {
 	std::vector<T> v;
 
 	void init() { v.reserve(4); }
-	// Note: this is aquivalent to cstl. it sets data, count, and size to 0
+	// this is about aquivalent to vector_T. it sets data, count, and size to 0
 	// swap calls the destructor and replaces it with a new stack allocated
 	// vector that doesnt do an allocation
-	void deinit() { std::vector<T>(0).swap(v); }
+	void deinit() { std::vector<T>().swap(v); }
 
 	void push_back_one(const T& val) { v.push_back(val); }
 	void push_back_n(const T* arr, size_t n) {
