@@ -179,10 +179,10 @@ dependencies:	stdint.h //SIZE_MAX and uintptr_t (when custom T_MOVE)
 	#define VEC__T_MCPY(dst, src, amount)\
 		do { \
 			VECTOR_T* VEC__RESTRICT cpy__dst = (dst); \
-			const VECTOR_T* VEC__RESTRICT cpy__src = (src); \
+			const VECTOR_T* VEC__RESTRICT cpy__src = (const VECTOR_T*) (src); \
 			size_t cpy__n = (size_t)(amount); \
 			\
-			if(LIKELY(cpy__n != 0 && cpy__dst != cpy__src)) { \
+			if(LIKELY(cpy__n != 0 && (const VECTOR_T*) cpy__dst != cpy__src)) { \
 				for(size_t cpy__i = 0; cpy__i < cpy__n; ++cpy__i) { \
 					VEC__T_MOVE(cpy__dst + cpy__i, cpy__src + cpy__i); \
 				} \
@@ -222,7 +222,7 @@ dependencies:	stdint.h //SIZE_MAX and uintptr_t (when custom T_MOVE)
 #define VEC__T_MSET(dst, pVal, amount) \
 	do { \
 		VECTOR_T* VEC__RESTRICT set__dst = (dst); \
-		const VECTOR_T* set__val = (pVal); \
+		VECTOR_T* set__val = (pVal); \
 		size_t set__n = (size_t)(amount); \
 		if(LIKELY(set__n != 0)) { \
 			for(size_t set__i = 0; set__i < set__n; ++set__i) { \
@@ -713,7 +713,7 @@ extern "C" {
 VEC__FN VEC_STATUS FN_NS(_init)(vec_T* vec VEC__CTX_PARAM, size_t startCap);
 
 #ifndef VECTOR_DEBLOAT
-VEC__FN VEC_STATUS FN_NS(_init_set)(vec_T* vec VEC__CTX_PARAM, size_t startCap, const val_T* val);
+VEC__FN VEC_STATUS FN_NS(_init_set)(vec_T* vec VEC__CTX_PARAM, size_t startCap, val_T* val);
 #endif
 
 #else
@@ -945,8 +945,8 @@ VEC__FN VEC_STATUS FN_NS(_init)(vec_T* vec VEC__CTX_PARAM, size_t startCap) {
 	return VECTOR_OK;
 }
 
-#if !defined(VECTOR_DEBLOAT) && !defined(VECTOR_T_INIT)
-VEC__FN VEC_STATUS FN_NS(_init_set)(vec_T* vec VEC__CTX_PARAM, size_t startCap, const val_T* val) {
+#if !defined(VECTOR_DEBLOAT)
+VEC__FN VEC_STATUS FN_NS(_init_set)(vec_T* vec VEC__CTX_PARAM, size_t startCap, val_T* val) {
 	VEC__NULL_CHECK(vec);
 
 	VEC__MUL_OVERFLOW_CHECK(SIZE_MAX, startCap, sizeof(val_T));
@@ -977,8 +977,8 @@ VEC__FN VEC_STATUS FN_NS(_init)(vec_T* vec) {
 }
 
 
-#if !defined(VECTOR_DEBLOAT) && !defined(VECTOR_T_INIT)
-VEC__FN VEC_STATUS FN_NS(_init_set)(vec_T* vec, const val_T* val) {
+#if !defined(VECTOR_DEBLOAT) 
+VEC__FN VEC_STATUS FN_NS(_init_set)(vec_T* vec, val_T* val) {
 	VEC__NULL_CHECK(vec);
 	VEC__T_MSET(vec->data, val, VECTOR_STATIC_SIZE);
 	vec->count = 0;
