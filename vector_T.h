@@ -8,7 +8,7 @@ NOTE: this expands to around 350 - 700LOC (including the header without noop lik
 
 to navigate the source file, do a search for:
 {section name}START or END
-MAKROS -> HELPERS HEAD SEMANTICS ALLOCERR ALLOC ERRORS //in the root directory makros/, copy&pasted
+MAKROS -> HELPERS HEAD SEMANTICS ALLOCERR ALLOC ERRORS
 HEADER -> STRUCT API // all the functions are here, just seach for _fnname
 	  IMPL (the implementation)
 UNDEFINES
