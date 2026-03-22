@@ -36,9 +36,6 @@ static inline double now_sec(void) {
 	return (double)ts.tv_sec + (double)ts.tv_nsec * 1e-9;
 }
 
-// noop to prevent some unwanted optimizations
-#define FENCE() __asm__ volatile("" ::: "memory")
-
 #define MAX_RESULTS 256
 
 typedef struct {
@@ -78,7 +75,8 @@ static inline void bench_update(BenchState* b, uint64_t ops) {
 	b->batch = want;
 }
 
-static inline void bench_finish(BenchState* b, const char* label, const char* type) {
+static inline void bench_finish(BenchState* b, const char* label,
+				const char* type) {
 	Result* r = &g_results[g_nresults++];
 	snprintf(r->label, sizeof r->label, "%s", label);
 	snprintf(r->type_name, sizeof r->type_name, "%s", type);
@@ -124,7 +122,7 @@ static inline void bench_char(double S) {
 		uint64_t n = b.batch;
 		charvec_clear(&v);
 		for (uint64_t i = 0; i < n; ++i) charvec_push_back(&v, 'x');
-		FENCE();
+
 		bench_update(&b, n);
 	}
 	bench_finish(&b, "push_back_1", "char");
@@ -135,7 +133,7 @@ static inline void bench_char(double S) {
 		charvec_clear(&v);
 		for (uint64_t i = 0; i < n; ++i)
 			charvec_push_back_arr(&v, arr, 64);
-		FENCE();
+
 		bench_update(&b, n * 64);
 	}
 	bench_finish(&b, "push_back_64", "char");
@@ -149,7 +147,7 @@ static inline void bench_char(double S) {
 			if (v.count >= 1024) v.count = 512;
 			charvec_insert(&v, 'x', 0);
 		}
-		FENCE();
+
 		bench_update(&b, n);
 	}
 	bench_finish(&b, "insert_front", "char");
@@ -163,7 +161,7 @@ static inline void bench_char(double S) {
 			if (v.count + 64 > 1024) v.count = 512;
 			charvec_insert_arr(&v, arr, 64, 0);
 		}
-		FENCE();
+
 		bench_update(&b, n * 64);
 	}
 	bench_finish(&b, "insert_64_front", "char");
@@ -178,7 +176,7 @@ static inline void bench_char(double S) {
 			charvec_replace(&v, 'x', pos);
 			pos = (pos + 1) & 1023;
 		}
-		FENCE();
+
 		bench_update(&b, n);
 	}
 	bench_finish(&b, "replace", "char");
@@ -197,7 +195,7 @@ static inline void bench_int(double S) {
 		uint64_t n = b.batch;
 		intvec_clear(&v);
 		for (uint64_t i = 0; i < n; ++i) intvec_push_back(&v, 42);
-		FENCE();
+
 		bench_update(&b, n);
 	}
 	bench_finish(&b, "push_back_1", "int");
@@ -208,7 +206,7 @@ static inline void bench_int(double S) {
 		intvec_clear(&v);
 		for (uint64_t i = 0; i < n; ++i)
 			intvec_push_back_arr(&v, arr, 64);
-		FENCE();
+
 		bench_update(&b, n * 64);
 	}
 	bench_finish(&b, "push_back_64", "int");
@@ -222,7 +220,7 @@ static inline void bench_int(double S) {
 			if (v.count >= 1024) v.count = 512;
 			intvec_insert(&v, 42, 0);
 		}
-		FENCE();
+
 		bench_update(&b, n);
 	}
 	bench_finish(&b, "insert_front", "int");
@@ -236,7 +234,7 @@ static inline void bench_int(double S) {
 			if (v.count + 64 > 1024) v.count = 512;
 			intvec_insert_arr(&v, arr, 64, 0);
 		}
-		FENCE();
+
 		bench_update(&b, n * 64);
 	}
 	bench_finish(&b, "insert_64_front", "int");
@@ -251,7 +249,7 @@ static inline void bench_int(double S) {
 			intvec_replace(&v, 42, pos);
 			pos = (pos + 1) & 1023;
 		}
-		FENCE();
+
 		bench_update(&b, n);
 	}
 	bench_finish(&b, "replace", "int");
@@ -271,7 +269,7 @@ static inline void bench_u64(double S) {
 		u64vec_clear(&v);
 		for (uint64_t i = 0; i < n; ++i)
 			u64vec_push_back(&v, 0xDEADBEEFULL);
-		FENCE();
+
 		bench_update(&b, n);
 	}
 	bench_finish(&b, "push_back_1", "uint64_t");
@@ -282,7 +280,7 @@ static inline void bench_u64(double S) {
 		u64vec_clear(&v);
 		for (uint64_t i = 0; i < n; ++i)
 			u64vec_push_back_arr(&v, arr, 64);
-		FENCE();
+
 		bench_update(&b, n * 64);
 	}
 	bench_finish(&b, "push_back_64", "uint64_t");
@@ -296,7 +294,7 @@ static inline void bench_u64(double S) {
 			if (v.count >= 1024) v.count = 512;
 			u64vec_insert(&v, 0xDEADBEEFULL, 0);
 		}
-		FENCE();
+
 		bench_update(&b, n);
 	}
 	bench_finish(&b, "insert_front", "uint64_t");
@@ -310,7 +308,7 @@ static inline void bench_u64(double S) {
 			if (v.count + 64 > 1024) v.count = 512;
 			u64vec_insert_arr(&v, arr, 64, 0);
 		}
-		FENCE();
+
 		bench_update(&b, n * 64);
 	}
 	bench_finish(&b, "insert_64_front", "uint64_t");
@@ -325,7 +323,7 @@ static inline void bench_u64(double S) {
 			u64vec_replace(&v, 0xDEADBEEFULL, pos);
 			pos = (pos + 1) & 1023;
 		}
-		FENCE();
+
 		bench_update(&b, n);
 	}
 	bench_finish(&b, "replace", "uint64_t");
@@ -349,7 +347,7 @@ static inline void bench_blob(double S) {
 		blobvec_clear(&v);
 		for (uint64_t i = 0; i < n; ++i)
 			blobvec_push_back_ptr(&v, &blob);
-		FENCE();
+
 		bench_update(&b, n);
 	}
 	bench_finish(&b, "push_back_1", "Blob256");
@@ -360,7 +358,7 @@ static inline void bench_blob(double S) {
 		blobvec_clear(&v);
 		for (uint64_t i = 0; i < n; ++i)
 			blobvec_push_back_arr(&v, arr, 64);
-		FENCE();
+
 		bench_update(&b, n * 64);
 	}
 	bench_finish(&b, "push_back_64", "Blob256");
@@ -374,7 +372,7 @@ static inline void bench_blob(double S) {
 			if (v.count >= 1024) v.count = 512;
 			blobvec_insert_ptr(&v, &blob, 0);
 		}
-		FENCE();
+
 		bench_update(&b, n);
 	}
 	bench_finish(&b, "insert_front", "Blob256");
@@ -388,7 +386,7 @@ static inline void bench_blob(double S) {
 			if (v.count + 64 > 1024) v.count = 512;
 			blobvec_insert_arr(&v, arr, 64, 0);
 		}
-		FENCE();
+
 		bench_update(&b, n * 64);
 	}
 	bench_finish(&b, "insert_64_front", "Blob256");
@@ -403,7 +401,7 @@ static inline void bench_blob(double S) {
 			blobvec_replace_ptr(&v, &blob, pos);
 			pos = (pos + 1) & 1023;
 		}
-		FENCE();
+
 		bench_update(&b, n);
 	}
 	bench_finish(&b, "replace", "Blob256");

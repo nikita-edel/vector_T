@@ -16,8 +16,6 @@ static inline double now_sec() {
 	    .count();
 }
 
-#define FENCE() __asm__ volatile("" ::: "memory")
-
 struct BenchResult {
 	const char* label;
 	const char* type_name;
@@ -58,9 +56,9 @@ struct StdWrapper {
 	std::vector<T> v;
 
 	void init() { v.reserve(4); }
-	// this is about aquivalent to vector_T. it sets data, count, and size to 0
-	// swap calls the destructor and replaces it with a new stack allocated
-	// vector that doesnt do an allocation
+	// this is about aquivalent to vector_T. it sets data, count, and size
+	// to 0 swap calls the destructor and replaces it with a new stack
+	// allocated vector that doesnt do an allocation
 	void deinit() { std::vector<T>().swap(v); }
 
 	void push_back_one(const T& val) { v.push_back(val); }
@@ -106,7 +104,7 @@ void run_suite(const char* type_name, double max_sec, const T& sample_val) {
 				      s.clear();
 				      for (uint64_t i = 0; i < n; ++i)
 					      s.push_back_one(sample_val);
-				      FENCE();
+
 				      return n;
 			      }));
 		s.deinit();
@@ -120,7 +118,7 @@ void run_suite(const char* type_name, double max_sec, const T& sample_val) {
 				      s.clear();
 				      for (uint64_t i = 0; i < n; ++i)
 					      s.push_back_n(batch_arr, BATCH);
-				      FENCE();
+
 				      return n * BATCH;
 			      }));
 		s.deinit();
@@ -141,7 +139,7 @@ void run_suite(const char* type_name, double max_sec, const T& sample_val) {
 					      }
 					      s.insert_at(sample_val, 0);
 				      }
-				      FENCE();
+
 				      return n;
 			      }));
 		s.deinit();
@@ -162,7 +160,7 @@ void run_suite(const char* type_name, double max_sec, const T& sample_val) {
 				    }
 				    s.insert_n_at(batch_arr, BATCH, 0);
 			    }
-			    FENCE();
+
 			    return n * BATCH;
 		    }));
 		s.deinit();
@@ -179,7 +177,7 @@ void run_suite(const char* type_name, double max_sec, const T& sample_val) {
 				    s.replace_at(sample_val, pos);
 				    pos = (pos + 1) & (INSERT_CAP - 1);
 			    }
-			    FENCE();
+
 			    return n;
 		    }));
 		s.deinit();
