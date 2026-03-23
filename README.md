@@ -21,7 +21,7 @@ Here is a small snippet. Else look into all of the [examples](https://github.com
 
 #define T int32_t, veci32
 #define VECTOR_IMPL
-#inlcude "vector_T.h"
+#include "vector_T.h"
 
 int main(void) {
   veci32 ints;
