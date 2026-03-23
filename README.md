@@ -1,6 +1,7 @@
 # vector_T.h
 
-a compiletime configurable dynamic/static array/stack written in C (99).
+a compiletime configurable, single header, dynamic/static array/stack written in C (99).
+A cut-out of a library I am writing, most of it is just merged headers and query replaced names.
 
 ## Features
 - comptime type + namespace
